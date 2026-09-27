@@ -11,16 +11,17 @@
 :root{
   --accent:#4cc2ff;
   --accent-2:#2a8cf0;
-  --glass:rgba(22,24,30,.72);
-  --glass-2:rgba(30,33,40,.78);
-  --stroke:rgba(255,255,255,.09);
-  --stroke-2:rgba(255,255,255,.16);
+  --glass:rgba(255,255,255,.075);
+  --glass-2:rgba(255,255,255,.1);
+  --glass-sheen:linear-gradient(165deg, rgba(255,255,255,.20), rgba(255,255,255,.015) 55%);
+  --stroke:rgba(255,255,255,.14);
+  --stroke-2:rgba(255,255,255,.24);
   --txt:#f2f4f8;
   --txt-dim:rgba(242,244,248,.62);
   --txt-faint:rgba(242,244,248,.38);
-  --radius:8px;
-  --radius-lg:12px;
-  --shadow:0 18px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);
+  --radius:10px;
+  --radius-lg:18px;
+  --shadow:0 24px 70px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.3);
   --taskbar-h:52px;
   --wall:radial-gradient(120% 90% at 22% 12%, #1d4a7a 0%, transparent 55%),
          radial-gradient(90% 80% at 82% 20%, #2b1f6b 0%, transparent 60%),
@@ -42,6 +43,42 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:10px;border:3px solid transparent;background-clip:content-box}
 .scroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.32);background-clip:content-box}
 .scroll::-webkit-scrollbar-track{background:transparent}
+
+/* ============================================================
+   TERMS OF USE GATE
+   ============================================================ */
+#terms{
+  position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:radial-gradient(140% 100% at 50% 0%,#0b1626 0%,#020509 70%);
+  transition:opacity .5s ease,visibility .5s ease;
+}
+#terms.done{opacity:0;visibility:hidden;pointer-events:none}
+.terms-box{
+  width:min(560px,100%);max-height:min(84vh,720px);display:flex;flex-direction:column;
+  background:linear-gradient(165deg,rgba(255,255,255,.14),rgba(255,255,255,.02) 55%),rgba(255,255,255,.06);
+  backdrop-filter:blur(38px) saturate(180%);-webkit-backdrop-filter:blur(38px) saturate(180%);
+  border:1px solid rgba(255,255,255,.22);border-radius:18px;
+  box-shadow:0 30px 90px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.35);
+  padding:26px 26px 20px;animation:termsIn .5s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes termsIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.terms-box h2{margin:0 0 14px;font-size:20px;font-weight:600;letter-spacing:.2px}
+.terms-body{flex:1;min-height:0;overflow:auto;padding-right:6px;font-size:12.8px;line-height:1.75;color:rgba(255,255,255,.82)}
+.terms-body p{margin:0 0 12px}
+.terms-strong{
+  margin:14px 0;padding:14px 15px;border-radius:10px;font-weight:700;font-size:12.5px;line-height:1.7;
+  color:#ffdede;background:rgba(255,90,90,.1);border:1px solid rgba(255,120,120,.35);
+}
+.terms-actions{display:flex;gap:10px;margin-top:18px;flex:none}
+.t-btn{
+  flex:1;padding:12px 16px;border-radius:10px;font-size:13.5px;font-weight:600;letter-spacing:.2px;
+  transition:transform .16s cubic-bezier(.16,1,.3,1),background .16s,box-shadow .16s;
+}
+.t-btn:active{transform:scale(.96)}
+.t-btn.decline{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:var(--txt)}
+.t-btn.decline:hover{background:rgba(255,90,90,.18);border-color:rgba(255,120,120,.4)}
+.t-btn.accept{background:var(--accent);color:#04070d;border:1px solid var(--accent);box-shadow:0 8px 24px rgba(76,194,255,.35)}
+.t-btn.accept:hover{filter:brightness(1.08)}
 
 /* ============================================================
    BOOT
@@ -162,7 +199,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 #winlayer{position:absolute;inset:0 0 var(--taskbar-h) 0;pointer-events:none}
 .win{
   position:absolute;pointer-events:auto;display:flex;flex-direction:column;min-width:300px;min-height:200px;
-  background:var(--glass);backdrop-filter:blur(34px) saturate(160%);-webkit-backdrop-filter:blur(34px) saturate(160%);
+  background:var(--glass-sheen), var(--glass);
+  backdrop-filter:blur(38px) saturate(180%);-webkit-backdrop-filter:blur(38px) saturate(180%);
   border:1px solid var(--stroke-2);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;
   animation:winIn .22s cubic-bezier(.2,.9,.25,1) both;
 }
@@ -175,13 +213,14 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .win.snapping{transition:left .18s ease,top .18s ease,width .18s ease,height .18s ease}
 .titlebar{
   height:38px;flex:none;display:flex;align-items:center;gap:9px;padding-left:12px;
-  background:rgba(255,255,255,.035);border-bottom:1px solid var(--stroke);cursor:default;user-select:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.01));
+  border-bottom:1px solid var(--stroke);cursor:default;user-select:none;
 }
 .titlebar .gl{width:18px;height:18px;border-radius:5px;font-size:10px;box-shadow:none}
 .titlebar b{font-weight:600;font-size:12.5px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wbtns{margin-left:auto;display:flex;height:100%}
 .wbtn{width:44px;display:grid;place-items:center;transition:background .13s}
-.wbtn:hover{background:rgba(255,255,255,.1)}
+.wbtn:hover{background:rgba(255,255,255,.12)}
 .wbtn.close:hover{background:#c42b1c}
 .wbtn svg{width:10px;height:10px;stroke:currentColor;stroke-width:1.2;fill:none}
 .wbody{flex:1;min-height:0;display:flex;overflow:hidden}
@@ -193,8 +232,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .rs.se{right:-3px;bottom:-3px;width:15px;height:15px;cursor:nwse-resize}
 .rs.sw{left:-3px;bottom:-3px;width:15px;height:15px;cursor:nesw-resize}
 #snaphint{
-  position:absolute;z-index:1;border:2px solid var(--accent);background:rgba(76,194,255,.16);
-  border-radius:var(--radius-lg);opacity:0;transition:all .15s ease;pointer-events:none;
+  position:absolute;z-index:1;border:2px solid var(--accent);background:rgba(76,194,255,.18);
+  backdrop-filter:blur(6px);border-radius:var(--radius-lg);opacity:0;transition:all .15s ease;pointer-events:none;
 }
 #snaphint.on{opacity:1}
 
@@ -204,15 +243,17 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 #taskbar{
   position:absolute;left:0;right:0;bottom:0;height:var(--taskbar-h);z-index:200;
   display:flex;align-items:center;padding:0 10px;
-  background:rgba(14,16,22,.76);backdrop-filter:blur(30px) saturate(170%);-webkit-backdrop-filter:blur(30px) saturate(170%);
-  border-top:1px solid rgba(255,255,255,.07);
+  background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.02) 45%),rgba(12,14,20,.58);
+  backdrop-filter:blur(40px) saturate(190%);-webkit-backdrop-filter:blur(40px) saturate(190%);
+  border-top:1px solid rgba(255,255,255,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 -10px 34px rgba(0,0,0,.32);
 }
 .tb-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:4px;align-items:center}
 .tbtn{
-  position:relative;width:42px;height:40px;border-radius:6px;display:grid;place-items:center;
+  position:relative;width:42px;height:40px;border-radius:8px;display:grid;place-items:center;
   transition:background .15s,transform .15s;
 }
-.tbtn:hover{background:rgba(255,255,255,.1)}
+.tbtn:hover{background:rgba(255,255,255,.13)}
 .tbtn:active{transform:scale(.9)}
 .tbtn .gl{width:26px;height:26px;border-radius:7px;font-size:12px}
 .tbtn i{
@@ -222,31 +263,32 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .tbtn.open i{width:7px}
 .tbtn.active i{width:17px;opacity:1}
 .tb-right{margin-left:auto;display:flex;align-items:center;gap:2px}
-.tray{display:flex;align-items:center;gap:12px;padding:6px 10px;border-radius:6px;transition:background .15s}
-.tray:hover{background:rgba(255,255,255,.1)}
+.tray{display:flex;align-items:center;gap:12px;padding:6px 10px;border-radius:8px;transition:background .15s}
+.tray:hover{background:rgba(255,255,255,.13)}
 .tray svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5;opacity:.9}
-#tb-clock{padding:6px 10px;border-radius:6px;text-align:right;line-height:1.35;font-size:12px;transition:background .15s}
-#tb-clock:hover{background:rgba(255,255,255,.1)}
+#tb-clock{padding:6px 10px;border-radius:8px;text-align:right;line-height:1.35;font-size:12px;transition:background .15s}
+#tb-clock:hover{background:rgba(255,255,255,.13)}
 #tb-clock small{display:block;color:var(--txt-dim);font-size:11.5px}
 
 /* start menu + panels */
 .panel{
-  position:absolute;z-index:210;background:var(--glass-2);backdrop-filter:blur(40px) saturate(170%);
-  -webkit-backdrop-filter:blur(40px) saturate(170%);border:1px solid var(--stroke-2);border-radius:var(--radius-lg);
+  position:absolute;z-index:210;background:var(--glass-sheen), var(--glass-2);
+  backdrop-filter:blur(44px) saturate(190%);-webkit-backdrop-filter:blur(44px) saturate(190%);
+  border:1px solid var(--stroke-2);border-radius:var(--radius-lg);
   box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(16px) scale(.98);
   transition:opacity .2s ease,transform .24s cubic-bezier(.2,.9,.25,1),visibility .24s;
 }
 .panel.show{opacity:1;visibility:visible;transform:none}
 #start{bottom:calc(var(--taskbar-h) + 8px);left:50%;margin-left:-min(48vw,300px);width:min(96vw,600px);max-height:70vh;padding:26px 30px 16px;display:flex;flex-direction:column}
 #start-search{
-  width:100%;padding:9px 14px;border-radius:20px;background:rgba(255,255,255,.07);
+  width:100%;padding:9px 14px;border-radius:20px;background:rgba(255,255,255,.08);
   border:1px solid var(--stroke-2);color:var(--txt);outline:none;font-size:13px;
 }
-#start-search:focus{border-color:var(--accent);background:rgba(255,255,255,.11)}
+#start-search:focus{border-color:var(--accent);background:rgba(255,255,255,.13)}
 .start-lbl{margin:20px 0 10px;font-size:12.5px;font-weight:600;color:var(--txt-dim)}
 #start-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:4px;overflow:auto;padding-bottom:6px}
-.sapp{padding:14px 6px 11px;border-radius:7px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:background .14s,transform .14s}
-.sapp:hover{background:rgba(255,255,255,.1)}
+.sapp{padding:14px 6px 11px;border-radius:9px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:background .14s,transform .14s}
+.sapp:hover{background:rgba(255,255,255,.12)}
 .sapp:active{transform:scale(.95)}
 .sapp .gl{width:34px;height:34px}
 .sapp span{font-size:11.5px;text-align:center;line-height:1.25}
@@ -254,14 +296,14 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .start-foot .avatar{width:32px;height:32px;font-size:13px;box-shadow:none}
 .start-foot b{font-size:13px;font-weight:500}
 .start-foot .fbtns{margin-left:auto;display:flex;gap:2px}
-.fbtn{width:34px;height:34px;border-radius:6px;display:grid;place-items:center;transition:background .14s}
-.fbtn:hover{background:rgba(255,255,255,.12)}
+.fbtn{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;transition:background .14s}
+.fbtn:hover{background:rgba(255,255,255,.14)}
 .fbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6}
 #quick{bottom:calc(var(--taskbar-h) + 8px);right:10px;width:min(92vw,330px);padding:18px}
 .qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.qtile{padding:14px 8px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--stroke);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11.5px;transition:background .15s,border-color .15s}
-.qtile.on{background:var(--accent);border-color:var(--accent);color:#04070d;font-weight:600}
-.qtile:hover{background:rgba(255,255,255,.13)}
+.qtile{padding:14px 8px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid var(--stroke);box-shadow:inset 0 1px 0 rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11.5px;transition:background .15s,border-color .15s}
+.qtile.on{background:var(--accent);border-color:var(--accent);color:#04070d;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 18px rgba(76,194,255,.35)}
+.qtile:hover{background:rgba(255,255,255,.15)}
 .qtile.on:hover{background:var(--accent-2);color:#fff}
 .qtile svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6}
 .qrow{margin-top:16px;display:flex;align-items:center;gap:11px;font-size:12px;color:var(--txt-dim)}
@@ -306,11 +348,12 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .sect > h3 b{margin-left:auto;font-size:11px;font-weight:500;color:var(--txt-faint)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(184px,1fr));gap:7px}
 .tile{
-  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:7px;
-  background:rgba(255,255,255,.045);border:1px solid var(--stroke);color:var(--txt);
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;
+  background:linear-gradient(165deg,rgba(255,255,255,.075),rgba(255,255,255,.015)),rgba(255,255,255,.02);
+  border:1px solid var(--stroke);color:var(--txt);
   text-decoration:none;font-size:12.5px;transition:background .14s,border-color .14s,transform .14s;
 }
-.tile:hover{background:rgba(255,255,255,.1);border-color:var(--stroke-2);transform:translateY(-1px)}
+.tile:hover{background:linear-gradient(165deg,rgba(255,255,255,.14),rgba(255,255,255,.03)),rgba(255,255,255,.02);border-color:var(--stroke-2);transform:translateY(-1px)}
 .tile .fav{
   width:22px;height:22px;flex:none;border-radius:5px;display:grid;place-items:center;
   font-size:10px;font-weight:700;background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
@@ -397,11 +440,12 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .arc{display:flex;flex-direction:column;width:100%;min-height:0}
 .arc-pick{flex:1;overflow:auto;padding:24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px;align-content:start}
 .gcard{
-  border-radius:11px;padding:18px 16px 16px;text-align:left;border:1px solid var(--stroke-2);
-  background:rgba(255,255,255,.05);transition:transform .16s,background .16s;overflow:hidden;position:relative;
+  border-radius:14px;padding:18px 16px 16px;text-align:left;border:1px solid var(--stroke-2);
+  background:linear-gradient(165deg,rgba(255,255,255,.09),rgba(255,255,255,.015)),rgba(255,255,255,.02);
+  transition:transform .16s,background .16s;overflow:hidden;position:relative;
 }
-.gcard:hover{transform:translateY(-3px);background:rgba(255,255,255,.1)}
-.gcard .art{height:74px;border-radius:8px;margin-bottom:13px;display:grid;place-items:center;font-size:30px}
+.gcard:hover{transform:translateY(-3px);background:linear-gradient(165deg,rgba(255,255,255,.16),rgba(255,255,255,.03)),rgba(255,255,255,.02)}
+.gcard .art{height:74px;border-radius:10px;margin-bottom:13px;display:grid;place-items:center;font-size:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
 .gcard b{display:block;font-size:14px;margin-bottom:3px}
 .gcard small{color:var(--txt-dim);font-size:11.5px;line-height:1.5}
 .arc-stage{flex:1;min-height:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:14px}
@@ -552,6 +596,25 @@ select.w11 option{background:#1b1e26;color:var(--txt)}
 </style>
 </head>
 <body>
+
+<!-- TERMS OF USE GATE -->
+<div id="terms">
+  <div class="terms-box">
+    <h2>Terms of Use</h2>
+    <div class="terms-body scroll">
+      <p>Before DDPR OS loads, please read and accept the following.</p>
+      <p>This site functions exclusively as a personal directory and storage hub used to bookmark and organize links to frequently used third-party websites, along with a small set of local, in-browser tools and games. It contains links to external, third-party websites for organizational convenience only.</p>
+      <p>All original site design, layouts, curated lists, and interface elements on this page belong to David Davis. All third-party logos, trademarks, brand names, and website content linked from this platform remain the exclusive property of their respective owners. David Davis does not own, operate, host, or control any content on these external sites. Inclusion of any link does not imply endorsement, affiliation, sponsorship, or guarantee of the external site's safety, accuracy, or privacy practices.</p>
+      <p>Any custom wallpaper you upload, and any notes, scores, or preferences you save, are stored only in your own browser on your own device. Nothing you do inside this OS is uploaded, transmitted, or made visible to anyone else.</p>
+      <div class="terms-strong">Neither David Davis nor this site accepts any responsibility or accountability whatsoever for anything you do with, or on, this site, or for any external, third-party site you reach through it. Accessing this site, its tools, and any linked external website is done entirely at your own risk, and entirely at your own responsibility.</div>
+      <p>By clicking Accept, you confirm you understand and agree to the above. If you do not agree, click Decline and this tab will close.</p>
+    </div>
+    <div class="terms-actions">
+      <button id="terms-decline" class="t-btn decline">Decline</button>
+      <button id="terms-accept" class="t-btn accept">Accept &amp; Continue</button>
+    </div>
+  </div>
+</div>
 
 <!-- BOOT -->
 <div id="boot">
@@ -711,7 +774,16 @@ const CATS=[
   ["anify.to","https://anify.to/"],["luna-stream.me","https://luna-stream.me/"],
   ["anihq.cc","https://anihq.cc/"],["yomi.to","https://yomi.to/"],
   ["kyren.moe","https://kyren.moe/"],["enma.lol","https://www.enma.lol"],
-  ["anikototv.to","https://anikototv.to/"]]},
+  ["anikototv.to","https://anikototv.to/"],
+  ["animepahe.pw","https://animepahe.pw/"],["0neko.cc/#/","https://0neko.cc/#/"],
+  ["2dhive.com","https://2dhive.com/"],["kawaiianime.cc","https://kawaiianime.cc/"],
+  ["9animstv.to","https://9animstv.to/"],["banime.top","https://banime.top/"],
+  ["aniclipse.com","https://aniclipse.com/"],["meguanime.com","https://meguanime.com/"],
+  ["anidb.app","https://anidb.app/"],["luffytv.live","https://luffytv.live/"],
+  ["luffytv.online","https://luffytv.online/"],["anichi.to/home","https://anichi.to/home"],
+  ["anisuge.tv/home","https://anisuge.tv/home"],["anikoto.net/home","https://anikoto.net/home"],
+  ["anikoto.cz","https://anikoto.cz/"],["anikoto.me","https://anikoto.me/"],
+  ["anikototv.se","https://anikototv.se/"]]},
  {id:"lit",name:"Literature",links:[
   ["liber3.eth.limo","https://liber3.eth.limo/"],["libgen.bz","https://libgen.bz/index.php"],
   ["annas-archive.gd","https://annas-archive.gd/"],["annas-archive.pk","https://annas-archive.pk/"],
@@ -818,7 +890,24 @@ async function runBoot(){
   await wait(900);
   $("#boot").classList.add("done");
 }
-runBoot();
+(function gateTerms(){
+  const box=$("#terms");
+  $("#terms-decline").addEventListener("click",()=>{
+    try{window.open("","_self");window.close();}catch(e){}
+    setTimeout(()=>{
+      document.documentElement.innerHTML=
+        '<body style="margin:0;height:100vh;display:grid;place-items:center;background:#04070d;'
+        +'color:rgba(255,255,255,.55);font-family:Segoe UI,system-ui,sans-serif;font-size:13px;'
+        +'text-align:center;padding:24px">You declined the Terms of Use, so DDPR OS did not load. '
+        +'You may close this tab.</body>';
+      try{window.location.replace("about:blank")}catch(e){}
+    },180);
+  });
+  $("#terms-accept").addEventListener("click",()=>{
+    box.classList.add("done");
+    setTimeout(()=>{box.style.display="none";runBoot();},520);
+  });
+})();
 
 const lock=$("#lock"), lockClock=$("#lock-clock"), lockLogin=$("#lock-login");
 let lockOpen=false;
@@ -1260,6 +1349,15 @@ const GAMES=[
   {id:"sequence",name:"Sequence",art:"linear-gradient(145deg,#4a1b6b,#150724)",
    icon:S('<circle cx="8" cy="8" r="3.4"/><circle cx="16" cy="8" r="3.4"/><circle cx="8" cy="16" r="3.4"/><circle cx="16" cy="16" r="3.4"/>'),
    desc:"Watch the pattern, then repeat it back.",run:runSequence,keys:"Click the pads in order"},
+  {id:"hopper",name:"Sky Hopper",art:"linear-gradient(145deg,#1b6b6b,#061c1c)",
+   icon:S('<path d="M4 15c2-6 6-9 8-9s6 3 8 9"/><circle cx="12" cy="8.4" r="2.1"/><path d="M4 19h16"/>'),
+   desc:"Tap to flap through the gaps without touching a pipe.",run:runHopper,keys:"Click, tap or press Space to flap"},
+  {id:"c4",name:"Connect Four",art:"linear-gradient(145deg,#1b3f6b,#071324)",
+   icon:S('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="7.5" cy="8.5" r="1.6"/><circle cx="12" cy="8.5" r="1.6"/><circle cx="16.5" cy="8.5" r="1.6"/><circle cx="7.5" cy="13" r="1.6"/><circle cx="12" cy="13" r="1.6"/><circle cx="16.5" cy="13" r="1.6"/>'),
+   desc:"Drop discs and get four in a row before the house does.",run:runConnect4,keys:"Click a column to drop"},
+  {id:"reflex",name:"Reflex Rush",art:"linear-gradient(145deg,#6b1b2f,#240711)",
+   icon:S('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.4 2"/>'),
+   desc:"Tap the target the instant it lights up.",run:runReflex,keys:"Click the pad as soon as it lights up"},
   {id:"2048",name:"2048",art:"linear-gradient(145deg,#7a5c1b,#2a1f07)",
    icon:S('<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>'),
    desc:"Merge matching tiles up to 2048.",run:run2048,keys:"Arrow keys or swipe"}
@@ -1267,6 +1365,185 @@ const GAMES=[
 /* ============================================================
    APP: BROWSER
    ============================================================ */
+/* ---------- Sky Hopper ---------- */
+function runHopper(api,node){
+  const W=380,H=520;
+  const cv=mkCanvas(api,W,H), g=cv.getContext("2d");
+  let bird={x:100,y:H/2,vy:0},pipes=[],score=0,over=false,started=false,raf,tPrev=performance.now();
+  const GAP=148,PW=54,GRAV=.34,FLAP=-6.6;
+  function reset(){bird={x:100,y:H/2,vy:0};pipes=[{x:W+40,h:80+Math.random()*180}];score=0;over=false;started=false;api.score(0)}
+  reset();
+  function flap(){
+    if(over){reset();return}
+    started=true; bird.vy=FLAP;
+  }
+  cv.addEventListener("mousedown",flap);
+  cv.addEventListener("touchstart",e=>{e.preventDefault();flap()},{passive:false});
+  const kd=e=>{if(e.key===" "||e.key==="ArrowUp"){e.preventDefault();flap()}};
+  document.addEventListener("keydown",kd);
+  const un2=bindDpad(api,d=>{if(d==="up"||d==="space")flap()});
+  function loop(t){
+    raf=requestAnimationFrame(loop);
+    if(document.hidden){tPrev=t;return}
+    const dt=Math.min(2,(t-tPrev)/16.7); tPrev=t;
+    if(started&&!over){
+      bird.vy+=GRAV*dt; bird.y+=bird.vy*dt;
+      pipes.forEach(p=>p.x-=2.6*dt);
+      if(pipes[pipes.length-1].x<W-190)pipes.push({x:W+20,h:60+Math.random()*(H-GAP-160)});
+      pipes.forEach(p=>{
+        if(!p.passed&&p.x+PW<bird.x){p.passed=true;score++;api.score(score)}
+      });
+      pipes=pipes.filter(p=>p.x>-PW-10);
+      pipes.forEach(p=>{
+        const hitX=bird.x+14>p.x&&bird.x-14<p.x+PW;
+        if(hitX&&(bird.y-13<p.h||bird.y+13>p.h+GAP))over=true;
+      });
+      if(bird.y>H-16||bird.y<10)over=true;
+    }
+    g.fillStyle="#05141a";g.fillRect(0,0,W,H);
+    g.fillStyle="rgba(255,255,255,.08)";
+    for(let i=0;i<5;i++)g.fillRect((i*90-((performance.now()/60)%90)),60+i%2*40,50,3);
+    g.fillStyle="#2fb59a";
+    pipes.forEach(p=>{
+      g.fillRect(p.x,0,PW,p.h);
+      g.fillRect(p.x,p.h+GAP,PW,H-p.h-GAP);
+      g.fillStyle="#39d1b1";g.fillRect(p.x-3,p.h-14,PW+6,14);g.fillRect(p.x-3,p.h+GAP,PW+6,14);
+      g.fillStyle="#2fb59a";
+    });
+    g.save();g.translate(bird.x,bird.y);g.rotate(Math.max(-.5,Math.min(.9,bird.vy*.06)));
+    g.fillStyle="#ffd93d";g.beginPath();g.arc(0,0,13,0,7);g.fill();
+    g.fillStyle="#04070d";g.beginPath();g.arc(5,-4,2,0,7);g.fill();
+    g.fillStyle="#ff8ac2";g.beginPath();g.moveTo(-13,0);g.lineTo(-22,-5);g.lineTo(-13,6);g.closePath();g.fill();
+    g.restore();
+    if(!started){
+      g.fillStyle="rgba(255,255,255,.85)";g.textAlign="center";g.font="13px Segoe UI,system-ui,sans-serif";
+      g.fillText("Click, tap, or press Space to start",W/2,H/2-40);
+    }
+    if(over){
+      g.fillStyle="rgba(3,6,12,.8)";g.fillRect(0,0,W,H);
+      g.fillStyle="#fff";g.textAlign="center";g.font="600 24px Segoe UI,system-ui,sans-serif";
+      g.fillText("Hit a pipe",W/2,H/2-6);
+      g.font="13px Segoe UI,system-ui,sans-serif";g.fillStyle="rgba(255,255,255,.7)";
+      g.fillText("Score "+score+" — click, tap or Space to try again",W/2,H/2+20);
+    }
+  }
+  raf=requestAnimationFrame(loop);
+  return ()=>{cancelAnimationFrame(raf);document.removeEventListener("keydown",kd);un2()};
+}
+
+/* ---------- Connect Four ---------- */
+function runConnect4(api){
+  const COLS=7,ROWS=6;
+  const wrap=el("div","");
+  wrap.style.cssText="display:flex;flex-direction:column;align-items:center;gap:12px";
+  const info=el("div","");
+  info.style.cssText="font-size:12.5px;color:var(--txt-dim)";
+  const board=el("div","");
+  board.style.cssText=`display:grid;grid-template-columns:repeat(${COLS},44px);grid-template-rows:repeat(${ROWS},44px);
+    gap:5px;padding:10px;border-radius:12px;background:rgba(40,90,180,.28);border:1px solid var(--stroke-2)`;
+  wrap.append(info,board); api.host.appendChild(wrap);
+  let cells,done,wins=0;
+  function reset(){cells=Array(ROWS*COLS).fill(null);done=false;info.textContent="You are red — click a column.";paint()}
+  function paint(){
+    board.innerHTML="";
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+      const v=cells[r*COLS+c];
+      const d=el("div","");
+      d.style.cssText=`border-radius:50%;background:${v==="R"?"#ff6b6b":v==="Y"?"#ffd93d":"rgba(255,255,255,.06)"};
+        box-shadow:${v?"inset 0 2px 4px rgba(0,0,0,.3), 0 1px 0 rgba(255,255,255,.25)":"inset 0 1px 3px rgba(0,0,0,.4)"};
+        cursor:pointer;transition:transform .12s`;
+      d.dataset.c=c;
+      d.addEventListener("click",()=>drop(c));
+      d.addEventListener("mouseenter",()=>{if(!done)d.style.transform="scale(1.06)"});
+      d.addEventListener("mouseleave",()=>d.style.transform="none");
+      board.appendChild(d);
+    }
+  }
+  function lowest(c){for(let r=ROWS-1;r>=0;r--)if(!cells[r*COLS+c])return r;return -1}
+  function winAt(idx){
+    const r=(idx/COLS)|0,c=idx%COLS,v=cells[idx];
+    const dirs=[[0,1],[1,0],[1,1],[1,-1]];
+    return dirs.some(([dr,dc])=>{
+      let n=1;
+      for(const s of [1,-1]){
+        let rr=r+dr*s,cc=c+dc*s;
+        while(rr>=0&&rr<ROWS&&cc>=0&&cc<COLS&&cells[rr*COLS+cc]===v){n++;rr+=dr*s;cc+=dc*s}
+      }
+      return n>=4;
+    });
+  }
+  function drop(c,who="R"){
+    if(done)return;
+    const r=lowest(c); if(r<0)return;
+    cells[r*COLS+c]=who; paint();
+    if(winAt(r*COLS+c)){
+      done=true; info.textContent=who==="R"?"You win.":"House wins.";
+      if(who==="R"){wins++;api.score(wins*100)}
+      return;
+    }
+    if(!cells.includes(null)){done=true;info.textContent="Board full — draw.";return}
+    if(who==="R")setTimeout(()=>cpuMove(),380);
+  }
+  function cpuMove(){
+    for(let c=0;c<COLS;c++){const r=lowest(c);if(r<0)continue;cells[r*COLS+c]="Y";if(winAt(r*COLS+c)){cells[r*COLS+c]="Y";drop(c,"Y");return}cells[r*COLS+c]=null}
+    for(let c=0;c<COLS;c++){const r=lowest(c);if(r<0)continue;cells[r*COLS+c]="R";const blocks=winAt(r*COLS+c);cells[r*COLS+c]=null;if(blocks){drop(c,"Y");return}}
+    const weights=[1,2,3,4,3,2,1];
+    let pool=[]; for(let c=0;c<COLS;c++)if(lowest(c)>=0)for(let k=0;k<weights[c];k++)pool.push(c);
+    drop(pool[(Math.random()*pool.length)|0],"Y");
+  }
+  reset();
+  return ()=>wrap.remove();
+}
+
+/* ---------- Reflex Rush ---------- */
+function runReflex(api){
+  const wrap=el("div","");
+  wrap.style.cssText="display:flex;flex-direction:column;align-items:center;gap:16px";
+  const info=el("div","");
+  info.style.cssText="font-size:13px;color:var(--txt-dim);min-height:18px";
+  const pad=el("button","","");
+  pad.style.cssText=`width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08);
+    border:2px solid var(--stroke-2);font-size:15px;font-weight:600;color:var(--txt-dim);
+    transition:background .12s,transform .1s,border-color .12s`;
+  pad.textContent="Click to start";
+  wrap.append(info,pad); api.host.appendChild(wrap);
+  let state="idle",timer=null,tShow=0,rounds=0,total=0,best=0;
+  function schedule(){
+    state="waiting"; pad.textContent="Wait for green…";
+    pad.style.background="rgba(255,120,120,.18)"; pad.style.borderColor="rgba(255,120,120,.4)";
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      state="ready"; tShow=performance.now();
+      pad.style.background="rgba(120,255,160,.28)"; pad.style.borderColor="#39ff70";
+      pad.textContent="Click now!";
+    },900+Math.random()*1800);
+  }
+  pad.addEventListener("click",()=>{
+    if(state==="idle"){rounds=0;total=0;best=0;info.textContent="";nextRound();return}
+    if(state==="waiting"){
+      clearTimeout(timer);
+      pad.style.background="rgba(255,255,255,.08)";pad.style.borderColor="var(--stroke-2)";
+      pad.textContent="Too soon — try again";
+      state="idle";
+      setTimeout(()=>{if(state==="idle")nextRound()},700);
+      return;
+    }
+    if(state==="ready"){
+      const ms=Math.round(performance.now()-tShow);
+      total++; if(!best||ms<best)best=ms;
+      api.score(Math.max(0,1000-ms));
+      info.textContent=`${ms} ms — round ${total}${best?`, best ${best} ms`:""}`;
+      pad.style.background="rgba(255,255,255,.08)";pad.style.borderColor="var(--stroke-2)";
+      pad.textContent="Nice — click for next";
+      state="between"; rounds++;
+      return;
+    }
+    if(state==="between"){nextRound()}
+  });
+  function nextRound(){pad.textContent="Get ready…";schedule()}
+  return ()=>{clearTimeout(timer);wrap.remove()};
+}
+
 function buildBrowser(body){
   const w=el("div","br");
   w.innerHTML=`
@@ -2320,21 +2597,90 @@ const ZONES=[
  ["Pacific/Auckland","New Zealand — Auckland"]
 ];
 function applyWall(k){$("#desktop").style.background=WALLS[k];$("#lock").style.background=WALLS[k];store.set("wall",k)}
+function applyWallCustom(dataURL){
+  const css=`center/cover no-repeat url(${dataURL})`;
+  $("#desktop").style.background=css; $("#lock").style.background=css;
+  store.set("wall","custom");
+}
 function applyAccent(c){document.documentElement.style.setProperty("--accent",c);store.set("accent",c)}
-applyWall(store.get("wall","aurora")); applyAccent(store.get("accent","#4cc2ff"));
+(function bootWall(){
+  const saved=store.get("wall","aurora");
+  if(saved==="custom"){
+    const cd=store.get("wallCustomData",null);
+    if(cd)applyWallCustom(cd); else applyWall("aurora");
+  }else applyWall(saved);
+})();
+applyAccent(store.get("accent","#4cc2ff"));
 function buildSettings(body){
   const w=el("div","sets scroll");
   w.innerHTML=`<h3>Personalization</h3><p class="sub">Change how DDPR OS looks. Choices are kept in this browser.</p>`;
-  const r1=el("div","srow","<b>Wallpaper</b><small>Pick a background for the desktop and lock screen.</small>");
+  const r1=el("div","srow","<b>Wallpaper</b><small>Pick a background, or upload your own photo (JPG or PNG).</small>");
   const walls=el("div","walls");
-  Object.entries(WALLS).forEach(([k,v])=>{
-    const b=el("button","wall-opt");
-    b.style.background=v; b.title=k;
-    b.classList.toggle("on",store.get("wall","aurora")===k);
-    b.addEventListener("click",()=>{applyWall(k);walls.querySelectorAll(".wall-opt").forEach(x=>x.classList.remove("on"));b.classList.add("on")});
-    walls.appendChild(b);
+  const upRow=el("div","");
+  upRow.style.cssText="display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap";
+  const upBtn=el("button","pill","Upload image");
+  const rmBtn=el("button","pill","Remove custom");
+  const upStat=el("small","","");
+  upStat.style.cssText="color:var(--txt-faint);font-size:11px";
+  const fileInput=document.createElement("input");
+  fileInput.type="file"; fileInput.accept="image/jpeg,image/png,.jpg,.jpeg,.png"; fileInput.style.display="none";
+  function paintWalls(){
+    walls.innerHTML="";
+    const active=store.get("wall","aurora");
+    Object.entries(WALLS).forEach(([k,v])=>{
+      const b=el("button","wall-opt");
+      b.style.background=v; b.title=k;
+      b.classList.toggle("on",active===k);
+      b.addEventListener("click",()=>{applyWall(k);paintWalls()});
+      walls.appendChild(b);
+    });
+    const custom=store.get("wallCustomData",null);
+    if(custom){
+      const b=el("button","wall-opt");
+      b.style.cssText+=`background:center/cover no-repeat url(${custom})`;
+      b.title="Your photo";
+      b.classList.toggle("on",active==="custom");
+      b.addEventListener("click",()=>{applyWallCustom(custom);paintWalls()});
+      walls.appendChild(b);
+    }
+    rmBtn.style.opacity=custom?"1":".4";
+  }
+  paintWalls();
+  upBtn.addEventListener("click",()=>fileInput.click());
+  fileInput.addEventListener("change",()=>{
+    const f=fileInput.files[0]; if(!f)return;
+    if(!/^image\/(jpeg|png)$/.test(f.type)){upStat.textContent="Please choose a .jpg or .png file.";return}
+    upStat.textContent="Processing…";
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const maxD=1920;
+        let iw=img.width,ih=img.height;
+        if(iw>maxD||ih>maxD){const s=maxD/Math.max(iw,ih);iw=Math.round(iw*s);ih=Math.round(ih*s)}
+        const c=document.createElement("canvas"); c.width=iw; c.height=ih;
+        c.getContext("2d").drawImage(img,0,0,iw,ih);
+        const data=c.toDataURL("image/jpeg",.84);
+        try{
+          store.set("wallCustomData",data);
+          applyWallCustom(data); paintWalls();
+          upStat.textContent="Wallpaper set.";
+        }catch(e){upStat.textContent="That image is too large for this browser to store — try a smaller photo."}
+      };
+      img.onerror=()=>upStat.textContent="Couldn't read that image.";
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(f);
+    fileInput.value="";
   });
-  r1.appendChild(walls);
+  rmBtn.addEventListener("click",()=>{
+    try{localStorage.removeItem("ddpr:wallCustomData")}catch(e){}
+    if(store.get("wall","aurora")==="custom")applyWall("aurora");
+    upStat.textContent="Custom wallpaper removed.";
+    paintWalls();
+  });
+  upRow.append(upBtn,rmBtn,fileInput,upStat);
+  r1.append(walls,upRow);
   const r2=el("div","srow","<b>Accent color</b><small>Used for highlights, indicators and buttons.</small>");
   const sws=el("div","swatches");
   ACCENTS.forEach(c=>{
@@ -2353,13 +2699,13 @@ function buildSettings(body){
   });
   sel.addEventListener("change",()=>{TZ=sel.value;store.set("tz",TZ);tick()});
   rt.appendChild(sel);
-  const r3=el("div","srow","<b>Reset everything</b><small>Clears notes, high scores and appearance settings.</small>");
+  const r3=el("div","srow","<b>Reset everything</b><small>Clears notes, high scores, wallpapers and appearance settings.</small>");
   const rb=el("button","pill","Reset"); rb.style.marginTop="10px";
   rb.addEventListener("click",()=>{
     try{Object.keys(localStorage).filter(k=>k.startsWith("ddpr:")).forEach(k=>localStorage.removeItem(k))}catch(e){}
     applyWall("aurora");applyAccent("#4cc2ff");
     TZ="America/Chicago";sel.value=TZ;tick();
-    walls.querySelectorAll(".wall-opt").forEach((x,i)=>x.classList.toggle("on",i===0));
+    paintWalls();
     sws.querySelectorAll(".sw").forEach((x,i)=>x.classList.toggle("on",i===0));
     rb.textContent="Reset — reopen apps to see changes";
   });
